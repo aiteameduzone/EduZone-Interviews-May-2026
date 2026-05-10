@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduZone Tech — CS Instructor Interview Evaluation</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --blue: #1A56DB;
+    --blue-dark: #0a1628;
+    --blue-mid: #132649;
+    --orange: #F97316;
+    --orange-light: #FFF3E8;
+    --white: #FFFFFF;
+    --gray-50: #F8FAFC;
+    --gray-100: #F1F5F9;
+    --gray-200: #E2E8F0;
+    --gray-300: #CBD5E1;
+    --gray-400: #94A3B8;
+    --gray-500: #64748B;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --green: #10B981;
+    --green-bg: #ECFDF5;
+    --yellow: #F59E0B;
+    --yellow-bg: #FFFBEB;
+    --red: #EF4444;
+    --red-bg: #FEF2F2;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-700);
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 100%);
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(10, 22, 40, 0.3);
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .logo-text {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .logo-text span { color: var(--orange); }
+
+  .header-sub {
+    font-size: 13px;
+    color: var(--gray-300);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .header-badge {
+    background: var(--orange);
+    color: var(--white);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+
+  /* Progress Bar */
+  .progress-wrap {
+    background: var(--white);
+    padding: 16px 32px;
+    border-bottom: 1px solid var(--gray-200);
+    position: sticky;
+    top: 90px;
+    z-index: 99;
+  }
+
+  .progress-steps {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .progress-step {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--gray-200);
+    transition: background 0.4s ease;
+    cursor: pointer;
+  }
+
+  .progress-step.active { background: var(--blue); }
+  .progress-step.done { background: var(--green); }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--gray-400);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* Main Container */
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 32px 24px 100px;
+  }
+
+  /* Section */
+  .section {
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .section.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+
+  .section-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--blue-dark);
+  }
+
+  .section-time {
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    color: var(--gray-400);
+    margin-bottom: 24px;
+    margin-left: 58px;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 16px;
+    border: 1px solid var(--gray-200);
+    transition: box-shadow 0.2s ease;
+  }
+
+  .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+
+  .card-label {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--gray-400);
+    margin-bottom: 8px;
+  }
+
+  .card-question {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--blue-dark);
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+
+  .card-hint {
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  .pass-fail {
+    display: flex;
+    gap: 8px;
+    font-size: 12px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .pass-item, .fail-item {
+    padding: 6px 12px;
+    border-radius: 8px;
+    line-height: 1.4;
+  }
+
+  .pass-item {
+    background: var(--green-bg);
+    color: #065F46;
+  }
+
+  .fail-item {
+    background: var(--red-bg);
+    color: #991B1B;
+  }
+
+  /* Inputs */
+  input[type="text"], input[type="tel"], input[type="email"], input[type="date"], textarea, select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--gray-700);
+    transition: border-color 0.2s;
+    background: var(--white);
+  }
+
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
+  }
+
+  textarea { resize: vertical; min-height: 70px; }
+
+  .field-group {
+    margin-bottom: 16px;
+  }
+
+  .field-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-600);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* Score Selector */
+  .score-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .score-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 2px solid var(--gray-200);
+    background: var(--white);
+    font-family: 'Space Mono', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--gray-400);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .score-btn:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+
+  .score-btn.selected {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: var(--white);
+  }
+
+  .score-btn.selected.s1 { background: var(--red); border-color: var(--red); }
+  .score-btn.selected.s2 { background: #F97316; border-color: #F97316; }
+  .score-btn.selected.s3 { background: var(--yellow); border-color: var(--yellow); color: #000; }
+  .score-btn.selected.s4 { background: var(--blue); border-color: var(--blue); }
+  .score-btn.selected.s5 { background: var(--green); border-color: var(--green); }
+
+  .score-label {
+    font-size: 12px;
+    color: var(--gray-400);
+    font-family: 'Space Mono', monospace;
+    margin-left: 8px;
+  }
+
+  /* AI Platform Options */
+  .platform-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+    max-height: 320px;
+    overflow-y: auto;
+  }
+
+  .platform-opt {
+    padding: 10px 14px;
+    border: 2px solid var(--gray-200);
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .platform-opt:hover { border-color: var(--blue); }
+  .platform-opt.selected { border-color: var(--orange); background: var(--orange-light); color: var(--orange); font-weight: 600; }
+
+  .time-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .time-chip {
+    padding: 8px 16px;
+    border: 2px solid var(--gray-200);
+    border-radius: 10px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+
+  .time-chip:hover { border-color: var(--blue); }
+  .time-chip.selected.tc-green { border-color: var(--green); background: var(--green-bg); color: #065F46; }
+  .time-chip.selected.tc-yellow { border-color: var(--yellow); background: var(--yellow-bg); color: #92400E; }
+  .time-chip.selected.tc-red { border-color: var(--red); background: var(--red-bg); color: #991B1B; }
+
+  /* Navigation */
+  .nav-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 32px;
+    gap: 12px;
+  }
+
+  .btn {
+    padding: 14px 32px;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .btn-back {
+    background: var(--gray-100);
+    color: var(--gray-600);
+  }
+
+  .btn-back:hover { background: var(--gray-200); }
+
+  .btn-next {
+    background: var(--blue);
+    color: var(--white);
+    margin-left: auto;
+  }
+
+  .btn-next:hover { background: #1447b8; transform: translateY(-1px); }
+
+  .btn-pdf {
+    background: linear-gradient(135deg, var(--orange) 0%, #E8590C 100%);
+    color: var(--white);
+    width: 100%;
+    padding: 18px;
+    font-size: 17px;
+    margin-top: 16px;
+  }
+
+  .btn-pdf:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(249, 115, 22, 0.3); }
+
+  /* Summary */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .summary-item {
+    background: var(--gray-50);
+    border-radius: 10px;
+    padding: 14px 16px;
+    border: 1px solid var(--gray-200);
+  }
+
+  .summary-item .si-label {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .summary-item .si-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--blue-dark);
+    margin-top: 4px;
+  }
+
+  .total-score-box {
+    text-align: center;
+    padding: 28px;
+    border-radius: 16px;
+    margin-bottom: 20px;
+  }
+
+  .total-score-box.hire { background: var(--green-bg); border: 2px solid var(--green); }
+  .total-score-box.maybe { background: var(--yellow-bg); border: 2px solid var(--yellow); }
+  .total-score-box.pass { background: var(--red-bg); border: 2px solid var(--red); }
+
+  .total-number {
+    font-size: 52px;
+    font-weight: 700;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .total-score-box.hire .total-number { color: var(--green); }
+  .total-score-box.maybe .total-number { color: var(--yellow); }
+  .total-score-box.pass .total-number { color: var(--red); }
+
+  .total-label {
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .verdict-text {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 8px;
+  }
+
+  .score-breakdown {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+
+  .score-breakdown th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gray-400);
+    border-bottom: 2px solid var(--gray-200);
+  }
+
+  .score-breakdown td {
+    padding: 10px 14px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--gray-100);
+  }
+
+  .score-breakdown td:last-child {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    text-align: center;
+    width: 60px;
+  }
+
+  .notes-summary {
+    background: var(--gray-50);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--gray-200);
+    margin-bottom: 16px;
+  }
+
+  .notes-summary h4 {
+    font-size: 13px;
+    font-family: 'Space Mono', monospace;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .notes-summary p {
+    font-size: 14px;
+    color: var(--gray-600);
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+
+  @media (max-width: 600px) {
+    .header { padding: 20px 16px; flex-direction: column; gap: 12px; }
+    .container { padding: 20px 16px 100px; }
+    .field-row { grid-template-columns: 1fr; }
+    .summary-grid { grid-template-columns: 1fr; }
+    .platform-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div>
+      <div class="logo-text">Edu<span>Zone</span> Tech</div>
+      <div class="header-sub">CS Instructor Interview — Summer Camp 2026</div>
+    </div>
+  </div>
+  <div class="header-badge">10 MIN EVAL</div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-steps" id="progressSteps"></div>
+  <div class="progress-label">
+    <span id="progressText">Section 1 of 6</span>
+    <span id="progressPct">0%</span>
+  </div>
+</div>
+
+<div class="container" id="app"></div>
+
+<script>
+const SECTIONS = [
+  {
+    id: 'info',
+    icon: '👤',
+    iconBg: '#EFF6FF',
+    title: 'Candidate Info',
+    time: 'Fill before interview starts',
+    type: 'info'
+  },
+  {
+    id: 'intro',
+    icon: '🗣️',
+    iconBg: '#F0FDF4',
+    title: 'A. Intro & Group Management',
+    time: '⏱️ 2 minutes',
+    questions: [
+      {
+        id: 'q1',
+        label: 'Question 1',
+        q: 'Tell me about yourself in 30 seconds — name, background, what you teach.',
+        hint: 'Assessing: clarity, confidence, structure',
+        scoreKey: 'communication',
+        scoreName: 'Communication & Confidence',
+        weight: 20
+      },
+      {
+        id: 'q2',
+        label: 'Question 2',
+        q: "What's the largest group of kids you've taught at once? What age group?",
+        hint: 'Listen for: specific numbers, age ranges, context (school/camp/online)',
+        scoreKey: 'group_mgmt',
+        scoreName: 'Group Management',
+        weight: 15
+      },
+      {
+        id: 'q3',
+        label: 'Question 3',
+        q: 'A 12-year-old keeps talking over you and 2 students stopped working. What do you do?',
+        hint: 'Looking for: step-by-step de-escalation, not punishment-first approach',
+        pass: ['Redirects attention calmly', 'Re-engages distracted students', 'Sets clear expectations'],
+        fail: ['Yells or threatens', 'Ignores the problem', 'Sends kid out immediately']
+      },
+      {
+        id: 'q4',
+        label: 'Question 4',
+        q: 'Mixed group — some finished in 5 min, others struggling. How do you handle both?',
+        hint: 'Looking for: differentiation strategy, not just "wait for slow ones"',
+        pass: ['Gives fast finishers extension tasks', 'Pairs strong with struggling', 'Uses tiered challenges'],
+        fail: ['Tells fast ones to just wait', 'Only helps struggling, ignores advanced', 'No strategy']
+      }
+    ]
+  },
+  {
+    id: 'zoom',
+    icon: '💻',
+    iconBg: '#EFF6FF',
+    title: 'B. Zoom Skills — Live Demo',
+    time: '⏱️ 2 minutes',
+    questions: [
+      {
+        id: 'z1',
+        label: 'Task 1 — Whiteboard',
+        q: 'Open Zoom whiteboard and draw a flowchart: User opens app → Login → Dashboard',
+        hint: 'Hand them the laptop. Watch speed and clarity.',
+        pass: ['Opens whiteboard quickly', 'Clean shapes & labels', 'Under 60 seconds'],
+        fail: ["Can't find whiteboard", 'Messy/unreadable', 'Takes over 60 seconds'],
+        scoreKey: 'zoom_wb',
+        scoreName: 'Zoom Whiteboard',
+        weight: 10
+      },
+      {
+        id: 'z2',
+        label: 'Task 2 — YouTube Sound Share',
+        q: 'Share your screen with a YouTube video so we can hear the audio clearly.',
+        hint: 'Must check "Share sound" / "Share computer audio" checkbox.',
+        pass: ['Share Screen → checks Share Sound → audio works'],
+        fail: ['Shares screen but no audio', "Doesn't know the checkbox"],
+        scoreKey: 'zoom_audio',
+        scoreName: 'Zoom Audio Sharing',
+        weight: 10
+      },
+      {
+        id: 'z3',
+        label: 'Task 3 — Breakout Rooms',
+        q: 'Create 3 breakout rooms named Team A, Team B, Team C.',
+        hint: 'Should know how to create, rename, and assign participants.',
+        pass: ['Creates 3 rooms', 'Renames correctly', 'Knows how to assign'],
+        fail: ["Can't find breakout rooms", "Doesn't know how to rename"],
+        scoreKey: 'zoom_rooms',
+        scoreName: 'Zoom Breakout Rooms',
+        weight: 5
+      }
+    ]
+  },
+  {
+    id: 'tech',
+    icon: '🧩',
+    iconBg: '#FFF7ED',
+    title: 'C. Technical Whiteboard',
+    time: '⏱️ 2 minutes',
+    questions: [
+      {
+        id: 't1',
+        label: 'Task 4 — Flowchart',
+        q: 'On whiteboard, draw a flowchart for building a To-Do List web app. Show user journey: opening page → adding → deleting a task.',
+        hint: 'Looking for: logical flow, proper shapes (rectangles for actions, diamonds for decisions)',
+        pass: ['Clear flow with all steps', 'Proper shapes used', 'Logical sequence'],
+        fail: ['No logical flow', 'Missing key steps', "Can't structure visually"],
+        scoreKey: 'flowchart',
+        scoreName: 'Flowchart Quality',
+        weight: 10
+      },
+      {
+        id: 't2',
+        label: 'Question 5 — Full Stack Sequence',
+        q: "If teaching a student to build a website from zero, what's the correct order of technologies and why?",
+        hint: 'Ideal: HTML → CSS → JS → Backend (Python/Node) → Database → Deployment. Must explain WHY each comes first.',
+        pass: ['Correct sequence', 'Explains reasoning', 'Mentions both front & back end'],
+        fail: ['Jumps to frameworks first', "Can't explain the order", 'Says "just use WordPress"'],
+        scoreKey: 'fullstack',
+        scoreName: 'Full Stack Sequence',
+        weight: 10
+      }
+    ]
+  },
+  {
+    id: 'ai',
+    icon: '🤖',
+    iconBg: '#FDF2F8',
+    title: 'D. AI Platform Speed Test',
+    time: '⏱️ 2 minutes',
+    type: 'ai_test'
+  },
+  {
+    id: 'closing',
+    icon: '🔧',
+    iconBg: '#F5F3FF',
+    title: 'E. Tech Troubleshooting & Closing',
+    time: '⏱️ 2 minutes',
+    questions: [
+      {
+        id: 'w1',
+        label: 'Task 6 — WiFi Password',
+        q: 'Find the WiFi password this laptop is connected to — without asking anyone.',
+        hint: 'Windows: Settings → Network → Show password OR cmd netsh. Mac: Keychain Access.',
+        pass: ['Finds it via Settings or CMD', 'Knows the method quickly'],
+        fail: ["Doesn't know where to look", 'Gives up', 'Asks someone'],
+        scoreKey: 'wifi',
+        scoreName: 'WiFi Password Task',
+        weight: 5
+      },
+      {
+        id: 'w2',
+        label: 'Question 6',
+        q: 'Can you commit to Sun–Thu, 8 AM–4 PM, June through August — with possible Fri/Sat overtime?',
+        hint: 'Availability confirmation — yes/no with any caveats.'
+      },
+      {
+        id: 'w3',
+        label: 'Question 7',
+        q: 'Why EduZone and not just any teaching job?',
+        hint: 'Looking for: passion, research about EduZone, career intent — not just "need a summer job"',
+        pass: ['Mentions education passion', 'Researched EduZone', 'Career growth interest'],
+        fail: ['"I just need a summer job"', 'No research about company', 'Generic answer'],
+        scoreKey: 'culture',
+        scoreName: 'Professionalism & Culture Fit',
+        weight: 5
+      }
+    ]
+  }
+];
+
+const AI_PLATFORMS = [
+  { id: 'heygen', name: 'HeyGen', task: 'Create a 15-sec AI avatar video saying: "Welcome to EduZone Tech"' },
+  { id: 'elevenlabs', name: 'ElevenLabs', task: 'Generate a voiceover: "Learn Python, build your future" — professional male voice' },
+  { id: 'leonardo', name: 'Leonardo AI', task: 'Generate an image of a kid coding on a laptop in a modern classroom' },
+  { id: 'runway', name: 'Runway ML', task: 'Generate a 4-sec video of a robot arm picking up a cube on a table' },
+  { id: 'suno', name: 'Suno AI', task: 'Create a 30-sec upbeat jingle with lyrics about learning to code' },
+  { id: 'ideogram', name: 'Ideogram', task: 'Generate a poster image with text: "EduZone Summer Camp 2026" in a tech style' },
+  { id: 'lovart', name: 'LovArt AI', task: 'Generate a realistic photo of a kid building a robot in a modern classroom' },
+  { id: 'napkin', name: 'Napkin AI', task: 'Turn this text into a visual diagram: "Students learn HTML then CSS then JS then Python"' },
+  { id: 'invideo', name: 'InVideo AI', task: 'Create a 30-sec promo video about a kids coding summer camp' },
+  { id: 'bolt', name: 'Bolt.new', task: 'Build a simple to-do list web app with add and delete functionality' }
+];
+
+let state = {
+  current: 0,
+  candidate: { name: '', phone: '', email: '', date: '', interviewer: '', position: '' },
+  scores: {},
+  notes: {},
+  ai: { platform: '', time: '', result_quality: 0 }
+};
+
+function render() {
+  const app = document.getElementById('app');
+  const sec = SECTIONS[state.current];
+
+  // Progress
+  const steps = document.getElementById('progressSteps');
+  steps.innerHTML = SECTIONS.map((s, i) => {
+    let cls = '';
+    if (i < state.current) cls = 'done';
+    else if (i === state.current) cls = 'active';
+    return `<div class="progress-step ${cls}" onclick="goTo(${i})"></div>`;
+  }).join('');
+  document.getElementById('progressText').textContent = `Section ${state.current + 1} of ${SECTIONS.length}`;
+  document.getElementById('progressPct').textContent = Math.round((state.current / (SECTIONS.length - 1)) * 100) + '%';
+
+  if (sec.type === 'info') {
+    app.innerHTML = renderInfo(sec);
+  } else if (sec.type === 'ai_test') {
+    app.innerHTML = renderAI(sec);
+  } else if (sec.id === 'summary') {
+    app.innerHTML = renderSummary();
+  } else {
+    app.innerHTML = renderQuestions(sec);
+  }
+}
+
+function renderInfo(sec) {
+  const c = state.candidate;
+  return `
+    <div class="section active">
+      <div class="section-header">
+        <div class="section-icon" style="background:${sec.iconBg}">${sec.icon}</div>
+        <div class="section-title">${sec.title}</div>
+      </div>
+      <div class="section-time">${sec.time}</div>
+      <div class="card">
+        <div class="field-group">
+          <label class="field-label">Candidate Full Name *</label>
+          <input type="text" id="c_name" value="${c.name}" placeholder="e.g. Ahmed Mohamed" onchange="state.candidate.name=this.value">
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">Phone</label>
+            <input type="tel" id="c_phone" value="${c.phone}" placeholder="01XXXXXXXXX" onchange="state.candidate.phone=this.value">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Email</label>
+            <input type="email" id="c_email" value="${c.email}" placeholder="email@example.com" onchange="state.candidate.email=this.value">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">Interview Date</label>
+            <input type="date" id="c_date" value="${c.date}" onchange="state.candidate.date=this.value">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Interviewer Name</label>
+            <input type="text" id="c_interviewer" value="${c.interviewer}" placeholder="Your name" onchange="state.candidate.interviewer=this.value">
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Position Applied For</label>
+          <select id="c_position" onchange="state.candidate.position=this.value">
+            <option value="" ${!c.position?'selected':''}>Select...</option>
+            <option value="CS Instructor" ${c.position==='CS Instructor'?'selected':''}>Computer Science Instructor</option>
+            <option value="AI Instructor" ${c.position==='AI Instructor'?'selected':''}>AI & Robotics Instructor</option>
+          </select>
+        </div>
+      </div>
+      <div class="nav-bar">
+        <div></div>
+        <button class="btn btn-next" onclick="next()">Start Interview →</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderQuestions(sec) {
+  let cards = sec.questions.map(q => {
+    let passHtml = '';
+    if (q.pass) {
+      passHtml = `<div class="pass-fail">
+        ${q.pass.map(p => `<div class="pass-item">✅ ${p}</div>`).join('')}
+        ${(q.fail||[]).map(f => `<div class="fail-item">❌ ${f}</div>`).join('')}
+      </div>`;
+    }
+
+    let scoreHtml = '';
+    if (q.scoreKey) {
+      const cur = state.scores[q.scoreKey] || 0;
+      scoreHtml = `
+        <div class="card-label" style="margin-top:8px">Score (1-5)</div>
+        <div class="score-row">
+          ${[1,2,3,4,5].map(n => `<button class="score-btn s${n} ${cur===n?'selected':''}" onclick="setScore('${q.scoreKey}',${n})">${n}</button>`).join('')}
+          <span class="score-label">${cur===0?'Not scored':['','Poor','Below Avg','Average','Good','Excellent'][cur]}</span>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="card">
+        <div class="card-label">${q.label}</div>
+        <div class="card-question">${q.q}</div>
+        <div class="card-hint">${q.hint}</div>
+        ${passHtml}
+        ${scoreHtml}
+        <div class="field-group" style="margin-top:12px">
+          <label class="field-label">Notes</label>
+          <textarea placeholder="Candidate's response / observations..." onchange="state.notes['${q.id}']=this.value">${state.notes[q.id]||''}</textarea>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="section active">
+      <div class="section-header">
+        <div class="section-icon" style="background:${sec.iconBg}">${sec.icon}</div>
+        <div class="section-title">${sec.title}</div>
+      </div>
+      <div class="section-time">${sec.time}</div>
+      ${cards}
+      <div class="nav-bar">
+        <button class="btn btn-back" onclick="prev()">← Back</button>
+        <button class="btn btn-next" onclick="next()">${state.current === SECTIONS.length - 1 ? 'View Summary →' : 'Next Section →'}</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderAI(sec) {
+  const ai = state.ai;
+  const selectedP = AI_PLATFORMS.find(p => p.id === ai.platform);
+
+  return `
+    <div class="section active">
+      <div class="section-header">
+        <div class="section-icon" style="background:${sec.iconBg}">${sec.icon}</div>
+        <div class="section-title">${sec.title}</div>
+      </div>
+      <div class="section-time">${sec.time}</div>
+
+      <div class="card">
+        <div class="card-label">Step 1 — Pick a Platform</div>
+        <div class="card-question">Select one AI platform for the candidate to use:</div>
+        <div class="platform-grid">
+          ${AI_PLATFORMS.map(p => `<div class="platform-opt ${ai.platform===p.id?'selected':''}" onclick="selectPlatform('${p.id}')">${p.name}</div>`).join('')}
+        </div>
+        ${selectedP ? `<div class="card-hint" style="background:var(--orange-light);padding:12px;border-radius:10px;margin-top:8px">
+          <strong>Task to give:</strong> "${selectedP.task}"
+        </div>` : ''}
+      </div>
+
+      <div class="card">
+        <div class="card-label">Step 2 — Time Result</div>
+        <div class="card-question">How long did it take?</div>
+        <div class="time-chips">
+          <div class="time-chip ${ai.time==='under1'?'selected tc-green':''}" onclick="setAITime('under1')">⭐ Under 1 min</div>
+          <div class="time-chip ${ai.time==='1to2'?'selected tc-yellow':''}" onclick="setAITime('1to2')">✅ 1–2 min</div>
+          <div class="time-chip ${ai.time==='over2'?'selected tc-red':''}" onclick="setAITime('over2')">❌ Over 2 min / Failed</div>
+          <div class="time-chip ${ai.time==='never'?'selected tc-red':''}" onclick="setAITime('never')">🚩 Never heard of any</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Score (1-5)</div>
+        <div class="score-row">
+          ${[1,2,3,4,5].map(n => `<button class="score-btn s${n} ${(state.scores.ai_test||0)===n?'selected':''}" onclick="setScore('ai_test',${n})">${n}</button>`).join('')}
+          <span class="score-label">${!state.scores.ai_test?'Not scored':['','Poor','Below Avg','Average','Good','Excellent'][state.scores.ai_test]}</span>
+        </div>
+        <div class="field-group" style="margin-top:14px">
+          <label class="field-label">Notes</label>
+          <textarea placeholder="Quality of result, speed, confidence level..." onchange="state.notes['ai_test']=this.value">${state.notes.ai_test||''}</textarea>
+        </div>
+      </div>
+
+      <div class="nav-bar">
+        <button class="btn btn-back" onclick="prev()">← Back</button>
+        <button class="btn btn-next" onclick="next()">Next Section →</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderSummary() {
+  const c = state.candidate;
+  const criteria = [
+    { key: 'communication', name: 'Communication & Confidence', w: 20 },
+    { key: 'group_mgmt', name: 'Group Management', w: 15 },
+    { key: 'zoom_wb', name: 'Zoom Whiteboard', w: 10 },
+    { key: 'zoom_audio', name: 'Zoom Audio Sharing', w: 10 },
+    { key: 'zoom_rooms', name: 'Zoom Breakout Rooms', w: 5 },
+    { key: 'flowchart', name: 'Flowchart Quality', w: 10 },
+    { key: 'fullstack', name: 'Full Stack Sequence', w: 10 },
+    { key: 'ai_test', name: 'AI Platform Speed Test', w: 10 },
+    { key: 'wifi', name: 'WiFi Password Task', w: 5 },
+    { key: 'culture', name: 'Professionalism & Culture Fit', w: 5 }
+  ];
+
+  let totalWeighted = 0, maxWeighted = 0;
+  criteria.forEach(cr => {
+    const s = state.scores[cr.key] || 0;
+    totalWeighted += s * (cr.w / 100);
+    maxWeighted += 5 * (cr.w / 100);
+  });
+
+  const rawTotal = criteria.reduce((sum, cr) => sum + (state.scores[cr.key] || 0), 0);
+  const pct = maxWeighted > 0 ? Math.round((totalWeighted / maxWeighted) * 100) : 0;
+
+  let verdict = '', verdictClass = '';
+  if (pct >= 80) { verdict = '✅ STRONG HIRE'; verdictClass = 'hire'; }
+  else if (pct >= 60) { verdict = '⚠️ POTENTIAL — Consider with training'; verdictClass = 'maybe'; }
+  else { verdict = '❌ PASS'; verdictClass = 'pass'; }
+
+  const aiPlatform = AI_PLATFORMS.find(p => p.id === state.ai.platform);
+  const aiTimeLabel = { under1: '⭐ Under 1 min', '1to2': '✅ 1–2 min', over2: '❌ Over 2 min', never: '🚩 Never heard of any' }[state.ai.time] || '—';
+
+  // Collect all notes
+  let allNotes = [];
+  SECTIONS.forEach(sec => {
+    if (sec.questions) {
+      sec.questions.forEach(q => {
+        if (state.notes[q.id]) allNotes.push({ label: q.label, text: state.notes[q.id] });
+      });
+    }
+  });
+  if (state.notes.ai_test) allNotes.push({ label: 'AI Platform Test', text: state.notes.ai_test });
+
+  return `
+    <div class="section active">
+      <div class="section-header">
+        <div class="section-icon" style="background:#FFF7ED">📋</div>
+        <div class="section-title">Interview Summary</div>
+      </div>
+      <div class="section-time">Review & generate PDF</div>
+
+      <div class="summary-grid">
+        <div class="summary-item"><div class="si-label">Candidate</div><div class="si-value">${c.name || '—'}</div></div>
+        <div class="summary-item"><div class="si-label">Position</div><div class="si-value">${c.position || '—'}</div></div>
+        <div class="summary-item"><div class="si-label">Date</div><div class="si-value">${c.date || '—'}</div></div>
+        <div class="summary-item"><div class="si-label">Interviewer</div><div class="si-value">${c.interviewer || '—'}</div></div>
+        <div class="summary-item"><div class="si-label">Phone</div><div class="si-value">${c.phone || '—'}</div></div>
+        <div class="summary-item"><div class="si-label">AI Platform</div><div class="si-value">${aiPlatform ? aiPlatform.name + ' — ' + aiTimeLabel : '—'}</div></div>
+      </div>
+
+      <div class="total-score-box ${verdictClass}">
+        <div class="total-number">${pct}%</div>
+        <div class="total-label">Weighted Score (${rawTotal}/50 raw)</div>
+        <div class="verdict-text">${verdict}</div>
+      </div>
+
+      <div class="card" style="padding:0;overflow:hidden">
+        <table class="score-breakdown">
+          <thead><tr><th>Criteria</th><th>Weight</th><th>Score</th></tr></thead>
+          <tbody>
+            ${criteria.map(cr => `<tr>
+              <td>${cr.name}</td>
+              <td style="font-family:'Space Mono';font-size:12px;color:var(--gray-400)">${cr.w}%</td>
+              <td style="color:${(state.scores[cr.key]||0)>=4?'var(--green)':(state.scores[cr.key]||0)>=3?'var(--yellow)':'var(--red)'}">${state.scores[cr.key] || '—'}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      ${allNotes.length > 0 ? `<div class="notes-summary">
+        <h4>Interview Notes</h4>
+        ${allNotes.map(n => `<p><strong>${n.label}:</strong> ${n.text}</p>`).join('')}
+      </div>` : ''}
+
+      <div class="field-group">
+        <label class="field-label">Final Interviewer Comments</label>
+        <textarea id="final_comments" placeholder="Overall impression, concerns, recommendation..." style="min-height:100px" onchange="state.notes.final=this.value">${state.notes.final||''}</textarea>
+      </div>
+
+      <button class="btn btn-pdf" onclick="generatePDF()">📄 Generate PDF Report</button>
+
+      <div class="nav-bar">
+        <button class="btn btn-back" onclick="prev()">← Back to Edit</button>
+      </div>
+    </div>
+  `;
+}
+
+// --- Actions ---
+function setScore(key, val) {
+  state.scores[key] = val;
+  render();
+}
+
+function selectPlatform(id) {
+  state.ai.platform = id;
+  render();
+}
+
+function setAITime(val) {
+  state.ai.time = val;
+  render();
+}
+
+function next() {
+  if (state.current < SECTIONS.length - 1) {
+    state.current++;
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    // Show summary
+    state.current = SECTIONS.length;
+    renderSummaryPage();
+  }
+}
+
+function prev() {
+  if (state.current > 0) {
+    if (state.current > SECTIONS.length - 1) state.current = SECTIONS.length - 1;
+    else state.current--;
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function goTo(i) {
+  state.current = i;
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderSummaryPage() {
+  const app = document.getElementById('app');
+  // Update progress
+  const steps = document.getElementById('progressSteps');
+  steps.innerHTML = SECTIONS.map((s, i) => `<div class="progress-step done"></div>`).join('');
+  document.getElementById('progressText').textContent = 'Summary';
+  document.getElementById('progressPct').textContent = '100%';
+  app.innerHTML = renderSummary();
+}
+
+// --- PDF Generation ---
+function generatePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p', 'mm', 'a4');
+  const W = 210, H = 297;
+  const c = state.candidate;
+  let y = 0;
+
+  // Header bar
+  doc.setFillColor(10, 22, 40);
+  doc.rect(0, 0, W, 36, 'F');
+  doc.setFillColor(249, 115, 22);
+  doc.rect(0, 36, W, 2, 'F');
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(20);
+  doc.setTextColor(255, 255, 255);
+  doc.text('EduZone Tech', 15, 17);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(200, 210, 225);
+  doc.text('CS Instructor Interview Evaluation — Summer Camp 2026', 15, 27);
+
+  doc.setFontSize(9);
+  doc.setTextColor(249, 115, 22);
+  doc.text('CONFIDENTIAL', W - 15, 17, { align: 'right' });
+
+  y = 46;
+
+  // Candidate info
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(10, 22, 40);
+  doc.text('Candidate Information', 15, y);
+  y += 8;
+
+  doc.setFillColor(241, 245, 249);
+  doc.roundedRect(15, y - 4, W - 30, 36, 3, 3, 'F');
+
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(71, 85, 105);
+
+  const infoRows = [
+    [`Name: ${c.name || '—'}`, `Position: ${c.position || '—'}`],
+    [`Phone: ${c.phone || '—'}`, `Email: ${c.email || '—'}`],
+    [`Interview Date: ${c.date || '—'}`, `Interviewer: ${c.interviewer || '—'}`]
+  ];
+
+  infoRows.forEach((row, i) => {
+    doc.text(row[0], 20, y + 4 + i * 10);
+    doc.text(row[1], 110, y + 4 + i * 10);
+  });
+
+  y += 42;
+
+  // Score breakdown
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(10, 22, 40);
+  doc.text('Score Breakdown', 15, y);
+  y += 8;
+
+  const criteria = [
+    { key: 'communication', name: 'Communication & Confidence', w: 20 },
+    { key: 'group_mgmt', name: 'Group Management', w: 15 },
+    { key: 'zoom_wb', name: 'Zoom Whiteboard', w: 10 },
+    { key: 'zoom_audio', name: 'Zoom Audio Sharing', w: 10 },
+    { key: 'zoom_rooms', name: 'Zoom Breakout Rooms', w: 5 },
+    { key: 'flowchart', name: 'Flowchart Quality', w: 10 },
+    { key: 'fullstack', name: 'Full Stack Sequence', w: 10 },
+    { key: 'ai_test', name: 'AI Platform Speed Test', w: 10 },
+    { key: 'wifi', name: 'WiFi Password Task', w: 5 },
+    { key: 'culture', name: 'Professionalism & Culture Fit', w: 5 }
+  ];
+
+  // Table header
+  doc.setFillColor(26, 86, 219);
+  doc.roundedRect(15, y - 2, W - 30, 8, 1, 1, 'F');
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(255, 255, 255);
+  doc.text('CRITERIA', 20, y + 3);
+  doc.text('WEIGHT', 130, y + 3);
+  doc.text('SCORE', 165, y + 3);
+  y += 10;
+
+  let totalWeighted = 0, maxWeighted = 0;
+
+  criteria.forEach((cr, i) => {
+    const s = state.scores[cr.key] || 0;
+    totalWeighted += s * (cr.w / 100);
+    maxWeighted += 5 * (cr.w / 100);
+
+    if (i % 2 === 0) {
+      doc.setFillColor(248, 250, 252);
+      doc.rect(15, y - 4, W - 30, 8, 'F');
+    }
+
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(51, 65, 85);
+    doc.text(cr.name, 20, y);
+    doc.setTextColor(148, 163, 184);
+    doc.text(cr.w + '%', 132, y);
+
+    if (s >= 4) doc.setTextColor(16, 185, 129);
+    else if (s >= 3) doc.setTextColor(245, 158, 11);
+    else if (s > 0) doc.setTextColor(239, 68, 68);
+    else doc.setTextColor(148, 163, 184);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text(s > 0 ? s.toString() + ' / 5' : '—', 165, y);
+    y += 8;
+  });
+
+  const rawTotal = criteria.reduce((sum, cr) => sum + (state.scores[cr.key] || 0), 0);
+  const pct = maxWeighted > 0 ? Math.round((totalWeighted / maxWeighted) * 100) : 0;
+
+  y += 4;
+
+  // Total score box
+  let verdictText = '', boxR = 0, boxG = 0, boxB = 0, bgR = 0, bgG = 0, bgB = 0;
+  if (pct >= 80) { verdictText = 'STRONG HIRE'; boxR = 16; boxG = 185; boxB = 129; bgR = 236; bgG = 253; bgB = 245; }
+  else if (pct >= 60) { verdictText = 'POTENTIAL — Consider with training'; boxR = 245; boxG = 158; boxB = 11; bgR = 255; bgG = 251; bgB = 235; }
+  else { verdictText = 'PASS'; boxR = 239; boxG = 68; boxB = 68; bgR = 254; bgG = 242; bgB = 242; }
+
+  doc.setFillColor(bgR, bgG, bgB);
+  doc.setDrawColor(boxR, boxG, boxB);
+  doc.roundedRect(15, y, W - 30, 28, 3, 3, 'FD');
+
+  doc.setFontSize(28);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(boxR, boxG, boxB);
+  doc.text(pct + '%', W / 2, y + 12, { align: 'center' });
+
+  doc.setFontSize(10);
+  doc.text(verdictText, W / 2, y + 22, { align: 'center' });
+
+  doc.setFontSize(8);
+  doc.setTextColor(100, 116, 139);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`Weighted Score | Raw: ${rawTotal}/50`, W / 2, y + 27, { align: 'center' });
+
+  y += 36;
+
+  // AI Platform test detail
+  const aiPlatform = AI_PLATFORMS.find(p => p.id === state.ai.platform);
+  if (aiPlatform) {
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(10, 22, 40);
+    doc.text('AI Platform Test', 15, y);
+    y += 6;
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(71, 85, 105);
+    const aiTimeLabel = { under1: 'Under 1 min (Excellent)', '1to2': '1-2 min (Pass)', over2: 'Over 2 min (Fail)', never: 'Never heard of any (Red Flag)' }[state.ai.time] || '—';
+    doc.text(`Platform: ${aiPlatform.name}  |  Time: ${aiTimeLabel}`, 15, y);
+    y += 10;
+  }
+
+  // Notes
+  let allNotes = [];
+  SECTIONS.forEach(sec => {
+    if (sec.questions) {
+      sec.questions.forEach(q => {
+        if (state.notes[q.id]) allNotes.push({ label: q.label, text: state.notes[q.id] });
+      });
+    }
+  });
+  if (state.notes.ai_test) allNotes.push({ label: 'AI Platform Test', text: state.notes.ai_test });
+
+  if (allNotes.length > 0) {
+    if (y > 240) { doc.addPage(); y = 20; }
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(10, 22, 40);
+    doc.text('Interview Notes', 15, y);
+    y += 8;
+
+    allNotes.forEach(n => {
+      if (y > 270) { doc.addPage(); y = 20; }
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(100, 116, 139);
+      doc.text(n.label.toUpperCase(), 15, y);
+      y += 5;
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(51, 65, 85);
+      const lines = doc.splitTextToSize(n.text, W - 35);
+      doc.text(lines, 15, y);
+      y += lines.length * 5 + 4;
+    });
+  }
+
+  // Final comments
+  if (state.notes.final) {
+    if (y > 250) { doc.addPage(); y = 20; }
+    y += 4;
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(10, 22, 40);
+    doc.text('Final Interviewer Comments', 15, y);
+    y += 8;
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(51, 65, 85);
+    const lines = doc.splitTextToSize(state.notes.final, W - 35);
+    doc.text(lines, 15, y);
+    y += lines.length * 5;
+  }
+
+  // Footer
+  const addFooter = (pg) => {
+    doc.setPage(pg);
+    doc.setFillColor(248, 250, 252);
+    doc.rect(0, H - 14, W, 14, 'F');
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(148, 163, 184);
+    doc.text('EduZone Tech — Confidential Interview Document', 15, H - 6);
+    doc.text(`Page ${pg}`, W - 15, H - 6, { align: 'right' });
+  };
+
+  const totalPages = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= totalPages; i++) addFooter(i);
+
+  const fileName = `EduZone_Interview_${(c.name || 'Candidate').replace(/\s+/g, '_')}_${c.date || new Date().toISOString().slice(0, 10)}.pdf`;
+  doc.save(fileName);
+}
+
+// Init
+render();
+</script>
+
+</body>
+</html>
